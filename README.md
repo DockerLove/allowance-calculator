@@ -7,8 +7,9 @@
 - Yarn- Docker / Docker Compose
 
 ## Запуск в режиме разработки
-yarn install
-yarn start
+- yarn install
+
+- yarn start
 
 Приложение откроется на http://localhost:3000
 
