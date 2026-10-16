@@ -1,48 +1,59 @@
 import { FC } from 'react';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography } from '@mui/material';
+import {
+    Box, LinearProgress, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography,
+} from '@mui/material';
 import Card from '../Card';
-import { CalculationRow } from '../../Types/calculation';
+import { Candidate, ExcludedItem } from '../../Types/calculation';
 
 interface ResultTableProps {
-    rows: CalculationRow[];
+    candidates: Candidate[];
+    excluded: ExcludedItem[];
 }
 
-const ResultTable: FC<ResultTableProps> = ({ rows }) => {
+const ResultTable: FC<ResultTableProps> = ({ candidates, excluded }) => {
     return (
-        <Card title="Результаты расчета припусков">
-            {rows.length === 0 ? (
-                <Typography variant="body2" color="text.secondary">
-                    Заполните параметры заготовки и выберите маршрут обработки, чтобы увидеть расчет.
-                </Typography>
-            ) : (
+        <Card title="Рейтинг вариантов СОЖ">
+            {candidates.length > 0 && (
                 <TableContainer component={Paper}>
                     <Table size="small">
                         <TableHead>
                             <TableRow>
-                                <TableCell>Переход</TableCell>
-                                <TableCell>Rz, мкм</TableCell>
-                                <TableCell>h, мкм</TableCell>
-                                <TableCell>ρ, мкм</TableCell>
-                                <TableCell>ε, мкм</TableCell>
-                                <TableCell>2Zmin, мкм</TableCell>
-                                <TableCell>Расчетный диаметр, мм</TableCell>
+                                <TableCell>№</TableCell>
+                                <TableCell>СОЖ</TableCell>
+                                <TableCell>Способ подачи</TableCell>
+                                <TableCell>Конц., %</TableCell>
+                                <TableCell sx={{ minWidth: 140 }}>Соответствие</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {rows.map((row, index) => (
-                                <TableRow key={index}>
-                                    <TableCell>{row.transitionLabel}</TableCell>
-                                    <TableCell>{row.rzPrev.toFixed(1)}</TableCell>
-                                    <TableCell>{row.hPrev.toFixed(1)}</TableCell>
-                                    <TableCell>{row.rhoPrev.toFixed(1)}</TableCell>
-                                    <TableCell>{row.epsilon.toFixed(1)}</TableCell>
-                                    <TableCell>{(2 * row.zMin).toFixed(1)}</TableCell>
-                                    <TableCell>{row.diameter.toFixed(3)}</TableCell>
+                            {candidates.map((c, index) => (
+                                <TableRow key={c.coolant.id} selected={index === 0}>
+                                    <TableCell>{index + 1}</TableCell>
+                                    <TableCell>{c.coolant.label}</TableCell>
+                                    <TableCell>{c.method.label}</TableCell>
+                                    <TableCell>{c.concentration !== null ? c.concentration : '—'}</TableCell>
+                                    <TableCell>
+                                        <Typography variant="body2">{c.score.toFixed(1)}%</Typography>
+                                        <LinearProgress variant="determinate" value={c.score} />
+                                    </TableCell>
                                 </TableRow>
                             ))}
                         </TableBody>
                     </Table>
                 </TableContainer>
+            )}
+
+            {excluded.length > 0 && (
+                <Box sx={{ mt: 2 }}>
+                    <Typography variant="subtitle2" gutterBottom>Исключённые варианты</Typography>
+                    <Box component="ul" sx={{ m: 0, pl: 3 }}>
+                        {excluded.map((item) => (
+                            <Typography component="li" variant="caption" color="text.secondary" key={item.coolant.id}>
+                                <b>{item.coolant.label}:</b> {item.reason}
+                            </Typography>
+                        ))}
+                    </Box>
+                </Box>
             )}
         </Card>
     );

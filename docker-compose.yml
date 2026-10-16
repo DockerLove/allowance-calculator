@@ -1,5 +1,7 @@
 services:
-  app:
+  coolant-advisor:
     build: .
+    container_name: coolant-advisor
     ports:
       - "3000:80"
+    restart: unless-stopped

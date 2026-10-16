@@ -1,4 +1,7 @@
 node_modules
 build
-.git
 .idea
+.git
+npm-debug.log
+Dockerfile
+docker-compose.yml
