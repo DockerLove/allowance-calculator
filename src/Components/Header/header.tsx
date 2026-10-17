@@ -5,19 +5,22 @@ import { MenuItem, MenuItemId } from './types';
 const menuItems: MenuItem[] = [
     { id: 'open', title: 'Открыть расчет' },
     { id: 'save', title: 'Сохранить расчет' },
+    { id: 'reset', title: 'Сбросить' },
 ];
 
 interface HeaderProps {
     onOpen: (file: File) => void;
     onSave: () => void;
+    onReset: () => void;
 }
 
-const Header: FC<HeaderProps> = ({ onOpen, onSave }) => {
+const Header: FC<HeaderProps> = ({ onOpen, onSave, onReset }) => {
     const inputRef = useRef<HTMLInputElement>(null);
 
     const handleClick = (id: MenuItemId) => {
         if (id === 'open') inputRef.current?.click();
         if (id === 'save') onSave();
+        if (id === 'reset') onReset();
     };
 
     const handleFile = (e: ChangeEvent<HTMLInputElement>) => {

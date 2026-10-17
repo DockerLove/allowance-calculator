@@ -24,6 +24,11 @@ function App() {
         setMessage({ text: 'Расчет сохранен в файл', severity: 'success' });
     };
 
+    const handleReset = () => {
+        setForm(defaultForm);
+        setMessage({ text: 'Данные сброшены', severity: 'success' });
+    };
+
     const handleOpen = async (file: File) => {
         try {
             setForm(parseForm(await file.text()));
@@ -35,7 +40,7 @@ function App() {
 
     return (
         <Box>
-            <Header onOpen={handleOpen} onSave={handleSave} />
+            <Header onOpen={handleOpen} onSave={handleSave} onReset={handleReset} />
             <Content form={form} onChange={handleChange} onLoadExample={() => setForm(exampleForm)} />
             <Snackbar
                 open={message !== null}
